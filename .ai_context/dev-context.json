@@ -1,0 +1,31 @@
+{
+  "vision": "VS Code extension showing the full dot-notation path of configuration keys in JSON, JSONC, YAML, and XML files.",
+  "steps": [],
+  "task": {
+    "title": "Config Key Viewer for VS Code",
+    "description": "The VS Code extension implementation is complete for the current functional scope. The next task is aligning the manifest, assets, and public documentation for VS Code Marketplace publication.",
+    "startedAt": "2026-07-07T09:18:52.019642600Z",
+    "completedAt": "2026-10-05",
+    "todos": [
+      {"text":"Resolve full configuration-key paths","done":true},
+      {"text":"Show hover tooltips and editor annotations","done":true},
+      {"text":"Support JSON, JSONC, YAML, and XML","done":true},
+      {"text":"Offer a format action for dense or minified lines","done":true},
+      {"text":"Prepare the extension for VS Code Marketplace publication","done":false}
+    ]
+  },
+  "lastSession": {
+    "date": "2026-10-05",
+    "done": "Documented the current VS Code implementation and its differences from the outdated IntelliJ-oriented DONE and README descriptions.",
+    "remaining": "Align the README and package metadata, add the Marketplace assets and legal/release files, package a VSIX, and complete functional acceptance before publishing.",
+    "blocker": "The ownership and availability of the jsonkeyviewer Marketplace publisher identity have not yet been confirmed."
+  },
+  "sessions": [
+    {
+      "date": "2026-07-07",
+      "done": "Added dense-line handling: new LineKeyIndex (cached per-file line→key count) collapses the gutter to a single 'reformat' hint icon when a line holds more keys than the configurable threshold (minified JSON, inline JSON, YAML flow mapping, inline XML). Clicking the hint reformats the file. Added settings (beautifyHintEnabled + maxKeysPerLine), beautify SVG icons (light/dark), test resource files and a GutterBeautifyTest.",
+      "remaining": "Run ./gradlew test to confirm gutter counts; TOML support remains for future iteration.",
+      "blocker": ""
+    }
+  ]
+}

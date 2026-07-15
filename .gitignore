@@ -1,0 +1,6 @@
+*:sec.endpointdlp
+node_modules/
+dist/
+*.vsix
+.vscode-test/
+.idea/
