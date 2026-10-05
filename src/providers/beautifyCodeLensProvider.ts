@@ -18,27 +18,31 @@ export class BeautifyCodeLensProvider implements vscode.CodeLensProvider {
 
     provideCodeLenses(document: vscode.TextDocument): vscode.ProviderResult<vscode.CodeLens[]> {
         const settings = getSettings();
-        if (!settings.gutterEnabled || !settings.beautifyHintEnabled || !isLanguageEnabled(document.languageId)) {
+        if (!settings.beautifyHintEnabled || !isLanguageEnabled(document.languageId)) {
             return [];
         }
 
         const entries = getEntries(document);
         if (!entries || entries.length === 0) { return []; }
 
-        const byLine = new Map<number, number>();
+        const byLine = new Map<number, Array<{ path: string; offset: number }>>();
         for (const entry of entries) {
             const line = document.positionAt(entry.offset).line;
-            byLine.set(line, (byLine.get(line) ?? 0) + 1);
+            const lineEntries = byLine.get(line) ?? [];
+            lineEntries.push(entry);
+            byLine.set(line, lineEntries);
         }
 
         const lenses: vscode.CodeLens[] = [];
-        for (const [line, count] of byLine) {
+        for (const [line, lineEntries] of byLine) {
+            const count = lineEntries.length;
             if (count <= settings.maxKeysPerLine) { continue; }
 
             lenses.push(new vscode.CodeLens(
                 new vscode.Range(line, 0, line, 0),
                 {
                     title: `Click here to format document (${count} config keys on this line)`,
+                    tooltip: lineEntries.map(entry => entry.path).join('\n'),
                     command: 'configKeyViewer.formatDocument',
                 },
             ));

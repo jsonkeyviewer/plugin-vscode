@@ -5,8 +5,7 @@ import { getAllXmlKeys  } from '../core/xmlKeyPathResolver';
 import { getSettings, isLanguageEnabled } from '../settings/settings';
 
 /**
- * VSCode InlayHintsProvider – equivalent to IntelliJ's gutter text mode
- * (showFullPathInGutter = true).
+ * VSCode InlayHintsProvider for optional inline key paths.
  *
  * Shows the full dot-notation key path as an inline annotation at the end
  * of each key line, e.g.:
@@ -33,7 +32,7 @@ export class ConfigKeyInlayHintProvider implements vscode.InlayHintsProvider {
         _range: vscode.Range,
     ): vscode.ProviderResult<vscode.InlayHint[]> {
         const settings = getSettings();
-        if (!settings.gutterEnabled || !settings.showFullPathInGutter || !isLanguageEnabled(document.languageId)) {
+        if (!settings.inlinePathEnabled || !isLanguageEnabled(document.languageId)) {
             return [];
         }
 
@@ -49,21 +48,8 @@ export class ConfigKeyInlayHintProvider implements vscode.InlayHintsProvider {
             const pos  = document.positionAt(offset);
             const line = pos.line;
 
-            if (settings.beautifyHintEnabled) {
-                const count = lineKeyCounts.get(line) ?? 1;
-                if (count > settings.maxKeysPerLine) {
-                    // Only emit one hint per dense line.
-                    if (offset !== firstOffsetOnLine(entries, line, document)) { continue; }
-                    const hint = new vscode.InlayHint(
-                        document.lineAt(line).range.end,
-                        `⚠ ${count} keys – reformat file`,
-                        vscode.InlayHintKind.Type,
-                    );
-                    hint.tooltip = `This line contains ${count} config keys. Click the text above this line to format the document.`;
-                    hints.push(hint);
-                    continue;
-                }
-            }
+            const count = lineKeyCounts.get(line) ?? 1;
+            if (count > settings.maxKeysPerLine) { continue; }
 
             const hint = new vscode.InlayHint(
                 document.lineAt(line).range.end,
@@ -103,17 +89,4 @@ function countKeysPerLine(
     return map;
 }
 
-function firstOffsetOnLine(
-    entries: Array<{ offset: number }>,
-    targetLine: number,
-    document: vscode.TextDocument,
-): number {
-    let first = Infinity;
-    for (const e of entries) {
-        if (document.positionAt(e.offset).line === targetLine && e.offset < first) {
-            first = e.offset;
-        }
-    }
-    return first;
-}
 

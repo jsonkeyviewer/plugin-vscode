@@ -1,7 +1,8 @@
-# JSON YAML XML Key Viewer — VSCode Extension
+# JSON YAML XML Key Viewer
 
-> VSCode extension – displays the full dot-notation path of any configuration key in JSON, YAML and XML files.
-> Adapted from the [IntelliJ plugin](../IntellijConfigKeyViewer) of the same project.
+Display the full dot-notation path of configuration keys directly in VS Code.
+The extension supports JSON, JSONC, YAML, and XML without requiring a language server
+or external service.
 
 ---
 
@@ -10,49 +11,73 @@
 | Feature | Description |
 |---|---|
 | **Hover tooltip** | Hover over any key to see its full path, e.g. `server.database.host (string)` |
-| **Gutter icon** | A key icon appears in the left margin on every key line. Hover it to see the path. |
-| **Inline path** | Optionally show the full path as an inline annotation at the end of each key line. |
+| **Key gutter icon** | Normal key lines show `...`; hover it to see the full path or every path found on that line. |
+| **Inline path** | Optionally show the full path as an Inlay Hint at the end of each key line. |
+| **Dense-line helper** | Replace `...` with a cross on dense lines and add a clickable document-format CodeLens. |
 | **Array support** | Array indices are included automatically, e.g. `servers[0].host` |
 | **Dot-key escaping** | Keys that contain a literal dot are quoted, e.g. `"my.key".child` |
+| **XML sibling support** | Repeated sibling tags receive indices, and self-closing elements are addressable. |
 | **Formats** | JSON ✅ · JSONC ✅ · YAML ✅ · XML ✅ |
 
 ---
 
-## Installation
+## Install
 
-### From VSIX (local build)
+### VS Code Marketplace
 
-```bash
-npm install
-npm run package   # requires @vscode/vsce: npm i -g @vscode/vsce
-```
+Open the Extensions view in VS Code and search for **JSON YAML XML Key Viewer**.
 
-Install the generated `.vsix` via `Extensions → … → Install from VSIX…`.
+### From a VSIX
 
-### Development
+Open `Extensions → … → Install from VSIX…` and select the packaged extension.
 
-```bash
-npm install
-npm run compile   # or: npm run watch
-# then press F5 in VSCode to open the Extension Development Host
-```
+## Usage
 
----
+Open a JSON, JSONC, YAML, or XML document, then hover a key to see its complete path.
+Enable inline paths from `Settings → Extensions → Config Key Viewer` when you want paths
+to remain visible in the editor.
+
+When a line contains more keys than the configured threshold, the extension replaces
+`...` with a cross and displays a **Format document** CodeLens above it. Hovering the
+cross also exposes the format action. Full paths remain available by hovering individual
+keys and from the CodeLens tooltip. The action delegates formatting to the formatter
+currently configured in VS Code.
 
 ## Configuration
 
-`Settings → Extensions → Config Key Viewer`
-
 | Option | Default | Description |
-|---|---|---|
-| `configKeyViewer.tooltipEnabled` | `true` | Show path in hover tooltip |
-| `configKeyViewer.showValueType` | `true` | Append the type (string, object, array…) |
-| `configKeyViewer.gutterEnabled` | `true` | Show key icon in the gutter |
-| `configKeyViewer.showFullPathInGutter` | `false` | Show full path as inline annotation instead of icon |
-| `configKeyViewer.beautifyHintEnabled` | `true` | Collapse to reformat hint on dense lines |
-| `configKeyViewer.maxKeysPerLine` | `3` | Max keys per line before showing the reformat hint |
+|---|---:|---|
+| `configKeyViewer.enabledLanguages` | JSON, JSONC, YAML, XML | Languages where the extension is enabled |
+| `configKeyViewer.tooltipEnabled` | `true` | Show the full path in a hover tooltip |
+| `configKeyViewer.showValueType` | `true` | Append the detected value type to the tooltip |
+| `configKeyViewer.gutterEnabled` | `true` | Show `...` on normal key lines and allow the dense-line cross |
+| `configKeyViewer.inlinePathEnabled` | `false` | Show the full path as an Inlay Hint at the end of each key line |
+| `configKeyViewer.beautifyHintEnabled` | `true` | Show the dense-line cross and clickable format CodeLens |
+| `configKeyViewer.maxKeysPerLine` | `3` | Number of keys allowed on one line before showing the format helper |
 
----
+Dense lines never show `...` or inline path hints. If beautify hints are disabled, they
+show no gutter icon or CodeLens. Disabling gutter icons alone hides the cross but keeps
+the CodeLens available.
+
+## Command
+
+`Config Key Viewer: Format Document` runs the standard VS Code document-format command.
+A formatter must be available for the active language.
+
+## Development
+
+```bash
+npm install
+npm run compile
+```
+
+Press `F5` in VS Code to open the Extension Development Host.
+
+Create the production VSIX with:
+
+```bash
+npm run package
+```
 
 ## Project structure
 
@@ -64,26 +89,31 @@ src/
     yamlKeyPathResolver.ts            ← yaml AST based resolver + key enumerator
     xmlKeyPathResolver.ts             ← text/regex based XML resolver + key enumerator
   providers/
-    hoverProvider.ts                  ← Hover tooltip (equivalent to IntelliJ Quick Doc)
-    inlayHintProvider.ts              ← Inline path annotations (showFullPathInGutter)
-    gutterDecorationProvider.ts       ← Gutter icon decorations
+    hoverProvider.ts                  ← Hover tooltip
+    inlayHintProvider.ts              ← Optional inline path annotations
+    gutterDecorationProvider.ts       ← Per-key gutter icons and path tooltips
+    beautifyCodeLensProvider.ts       ← Clickable document-format action
   settings/
     settings.ts                       ← VSCode settings wrapper
 resources/
   icons/
-    key.svg                           ← key gutter icon
-    beautify.svg                      ← dense-line reformat hint icon
+    configKey.svg                     ← key-path icon for light themes
+    configKey_dark.svg                ← key-path icon for dark themes
+    beautify.svg                      ← format marker for light themes
+    beautify_dark.svg                 ← format marker for dark themes
 ```
 
----
+## Release notes
 
-## Changelog
+See [CHANGELOG.md](CHANGELOG.md).
 
-### 1.0.0 — 2026-07-07
-- Initial release – adapted from the IntelliJ plugin
-- JSON, JSONC, YAML and XML support (hover tooltip + gutter annotations)
-- Array index support (`servers[0].host`)
-- Inline-path mode (InlayHints) and gutter icon mode
-- Dense-line beautify hint
-- Configurable via VSCode settings
+## Links
+
+- [Source code](https://github.com/jsonkeyviewer/plugin-vscode)
+- [Report an issue](https://github.com/jsonkeyviewer/plugin-vscode/issues)
+- [Documentation First](https://documentationfirst.ai)
+
+## License
+
+[MIT](LICENSE) © 2026 Documentation First
 

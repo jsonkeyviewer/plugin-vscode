@@ -34,27 +34,25 @@ refresh and decoration updates react to document and configuration changes.
 
 ---
 
-## Current contradictions
+## Reconciled behaviour
 
-The implementation and its public documentation are not fully aligned yet:
+The Marketplace preparation reconciled the implementation and public documentation:
 
 - This DONE previously described the IntelliJ/Kotlin implementation, including Gradle,
   PSI APIs, and IntelliJ Marketplace work. That content did not describe this repository.
-- `README.md` says that a key icon appears in the gutter on every key line. The current
-  implementation uses the gutter for the dense-line beautify marker instead.
-- `configKeyViewer.showFullPathInGutter` is a historical setting name. The path is
-  rendered as an Inlay Hint at the end of the line, not as gutter text.
-- `configKeyViewer.gutterEnabled` also has a broader historical name than its current
-  editor-annotation and beautify-marker behaviour.
-- `configKeyViewer.enabledLanguages`, the clickable formatting CodeLens, and support for
-  self-closing XML keys are absent from the README feature/configuration description.
-- The README project tree omits `beautifyCodeLensProvider.ts` and names `key.svg`, while
-  the actual gutter assets use the `configKey*.svg` and `beautify*.svg` names.
+- `configKeyViewer.gutterEnabled` controls the core per-key gutter icons and full-path
+  tooltips, enabled by default.
+- `configKeyViewer.inlinePathEnabled` accurately names the optional end-of-line Inlay
+  Hints and remains independent from gutter icons.
+- Normal lines use the `...` key icon. Dense lines never use it: when beautify is active
+  they use the cross and clickable CodeLens, with paths available through hover and the
+  CodeLens tooltip.
+- The README now documents `enabledLanguages`, the formatting CodeLens, self-closing XML
+  keys, current provider structure, and the actual icon assets.
 - The current implementation changes are still uncommitted, so the repository's initial
   commit does not represent the working-tree behaviour documented here.
 
-These are documentation, naming, and delivery inconsistencies. They do not identify a
-known functional blocker in the implemented editor behaviour.
+The restored gutter behaviour remains the primary extension feature.
 
 ---
 

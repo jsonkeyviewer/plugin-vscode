@@ -6,7 +6,7 @@ export interface ConfigKeyViewerSettings {
     tooltipEnabled: boolean;
     showValueType: boolean;
     gutterEnabled: boolean;
-    showFullPathInGutter: boolean;
+    inlinePathEnabled: boolean;
     beautifyHintEnabled: boolean;
     maxKeysPerLine: number;
 }
@@ -18,7 +18,7 @@ export function getSettings(): ConfigKeyViewerSettings {
         tooltipEnabled:       cfg.get<boolean>('tooltipEnabled',      true),
         showValueType:        cfg.get<boolean>('showValueType',        true),
         gutterEnabled:        cfg.get<boolean>('gutterEnabled',        true),
-        showFullPathInGutter: cfg.get<boolean>('showFullPathInGutter', false),
+        inlinePathEnabled:    cfg.get<boolean>('inlinePathEnabled',    false),
         beautifyHintEnabled:  cfg.get<boolean>('beautifyHintEnabled',  true),
         maxKeysPerLine:       cfg.get<number> ('maxKeysPerLine',       3),
     };

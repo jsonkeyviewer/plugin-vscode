@@ -1,0 +1,14 @@
+.ai_context/**
+.git/**
+.github/**
+.idea/**
+.vscode/**
+node_modules/**
+src/**
+*.iml
+*.vsix
+.gitignore
+tsconfig*.json
+webpack*.js
+dist/**/*.map
+resources/icons/icon.svg

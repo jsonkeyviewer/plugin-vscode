@@ -3,8 +3,24 @@
   "displayName": "JSON YAML XML Key Viewer",
   "description": "Displays the full dot-notation path of any configuration key in JSON, YAML and XML files.",
   "version": "1.0.0",
-  "private": true,
-  "publisher": "jsonkeyviewer",
+  "publisher": "DocumentationFirst",
+  "author": "Documentation First <contact@documentationfirst.ai>",
+  "license": "MIT",
+  "homepage": "https://github.com/jsonkeyviewer/plugin-vscode#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsonkeyviewer/plugin-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jsonkeyviewer/plugin-vscode/issues",
+    "email": "contact@documentationfirst.ai"
+  },
+  "icon": "resources/icons/icon.png",
+  "pricing": "Free",
+  "galleryBanner": {
+    "color": "#1E3A5F",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -50,9 +66,9 @@
         "configKeyViewer.gutterEnabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable key-path editor annotations and the beautify gutter marker for dense lines."
+          "description": "Show a key icon in the gutter with the full key path in its tooltip."
         },
-        "configKeyViewer.showFullPathInGutter": {
+        "configKeyViewer.inlinePathEnabled": {
           "type": "boolean",
           "default": false,
           "description": "Show the full key path as an inline annotation at the end of each key line."
@@ -60,7 +76,7 @@
         "configKeyViewer.beautifyHintEnabled": {
           "type": "boolean",
           "default": true,
-          "description": "Show a beautify gutter marker and clickable format action when a line holds too many keys (e.g. minified JSON)."
+          "description": "Show a clickable format action when a line holds too many keys (e.g. minified JSON)."
         },
         "configKeyViewer.maxKeysPerLine": {
           "type": "number",
@@ -79,6 +95,7 @@
     "package": "vsce package"
   },
   "devDependencies": {
+    "@vscode/vsce": "^4.0.0",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
     "ts-loader": "^9.5.1",
