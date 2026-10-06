@@ -66,7 +66,7 @@ export function applyGutterDecorations(
     const keyDecorations: vscode.DecorationOptions[] = [];
     const beautifyDecorations: vscode.DecorationOptions[] = [];
     for (const [line, lineEntries] of byLine) {
-        const isDense = lineEntries.length > settings.maxKeysPerLine;
+        const isDense = isDenseLine(lineEntries.length, settings.maxKeysPerLine);
         if (isDense) {
             if (settings.beautifyHintEnabled) {
                 beautifyDecorations.push({
@@ -79,12 +79,22 @@ export function applyGutterDecorations(
 
         keyDecorations.push({
             range: getHoverRange(document, line),
-            hoverMessage: createPathTooltip(lineEntries.map(entry => entry.path)),
         });
     }
 
     editor.setDecorations(getKeyDecoration(extensionUri), keyDecorations);
     editor.setDecorations(getBeautifyDecoration(extensionUri), beautifyDecorations);
+}
+
+/** Whether the hovered line receives the formatting decoration's tooltip. */
+export function hasBeautifyTooltipAt(document: vscode.TextDocument, line: number): boolean {
+    const settings = getSettings();
+    if (!settings.gutterEnabled || !settings.beautifyHintEnabled || !isLanguageEnabled(document.languageId)) {
+        return false;
+    }
+
+    const lineEntries = getEntries(document)?.filter(entry => document.positionAt(entry.offset).line === line);
+    return isDenseLine(lineEntries?.length ?? 0, settings.maxKeysPerLine);
 }
 
 export function clearGutterDecorations(
@@ -100,6 +110,10 @@ export function disposeDecorationTypes(): void {
     keyDecorationType = undefined;
     beautifyDecorationType?.dispose();
     beautifyDecorationType = undefined;
+}
+
+function isDenseLine(keyCount: number, maxKeysPerLine: number): boolean {
+    return keyCount > maxKeysPerLine;
 }
 
 function getEntries(document: vscode.TextDocument) {
@@ -121,24 +135,6 @@ function getHoverRange(document: vscode.TextDocument, line: number): vscode.Rang
     }
 
     return textLine.range;
-}
-
-function createPathTooltip(paths: string[]): vscode.MarkdownString {
-    const message = new vscode.MarkdownString();
-
-    if (paths.length === 1) {
-        message.appendMarkdown('**Config key**\n\n');
-        message.appendText(paths[0]);
-        return message;
-    }
-
-    message.appendMarkdown(`**Config keys (${paths.length})**\n\n`);
-    for (const path of paths) {
-        message.appendMarkdown('- ');
-        message.appendText(path);
-        message.appendMarkdown('\n');
-    }
-    return message;
 }
 
 function createBeautifyTooltip(keyCount: number): vscode.MarkdownString {

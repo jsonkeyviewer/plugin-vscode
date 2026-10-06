@@ -3,6 +3,7 @@ import { resolveJsonKeyPathAt } from '../core/jsonKeyPathResolver';
 import { resolveYamlKeyPathAt } from '../core/yamlKeyPathResolver';
 import { resolveXmlKeyPathAt  } from '../core/xmlKeyPathResolver';
 import { getSettings, isLanguageEnabled } from '../settings/settings';
+import { hasBeautifyTooltipAt } from './gutterDecorationProvider';
 
 /**
  * VSCode HoverProvider – equivalent to IntelliJ's ConfigKeyTooltipProvider (Ctrl+Q).
@@ -19,6 +20,8 @@ export class ConfigKeyHoverProvider implements vscode.HoverProvider {
     ): vscode.ProviderResult<vscode.Hover> {
         const settings = getSettings();
         if (!settings.tooltipEnabled || !isLanguageEnabled(document.languageId)) { return null; }
+        // Dense lines with a beautify marker already supply the formatting tooltip.
+        if (hasBeautifyTooltipAt(document, position.line)) { return null; }
 
         const result = this.resolve(document, position);
         if (!result) { return null; }
@@ -56,4 +59,3 @@ export class ConfigKeyHoverProvider implements vscode.HoverProvider {
         return null;
     }
 }
-

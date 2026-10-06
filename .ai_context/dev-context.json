@@ -15,10 +15,10 @@
     ]
   },
   "lastSession": {
-    "date": "2026-10-05",
-    "done": "Prepared the Marketplace files and restored the intended gutter matrix: normal lines use the key icon, while dense lines use the beautify cross and independent CodeLens without key icons or inline hints.",
-    "remaining": "Package the VSIX, inspect it, and complete functional acceptance across JSON, JSONC, YAML, and XML.",
-    "blocker": "The project contract requires the developer to run the remaining npm packaging command manually."
+    "date": "2026-10-06",
+    "done": "Removed the normal-line Config key decoration tooltip and suppressed the key HoverProvider only on lines with an enabled beautify tooltip; icons, CodeLens, inline hints, and formatting action were preserved, with no IDE errors reported.",
+    "remaining": "Run npm run compile, restart the Extension Development Host, and functionally verify exclusive line tooltips and formatting before packaging and publication.",
+    "blocker": "The project contract prohibits agent terminal execution; webpack compilation and runtime acceptance remain developer steps."
   },
   "sessions": [
     {
@@ -32,6 +32,12 @@
       "done": "Documented the current VS Code implementation and its differences from the outdated IntelliJ-oriented DONE and README descriptions.",
       "remaining": "Align the README and package metadata, add the Marketplace assets and legal/release files, package a VSIX, and complete functional acceptance before publishing.",
       "blocker": "The ownership and availability of the jsonkeyviewer Marketplace publisher identity had not yet been confirmed."
+    },
+    {
+      "date": "2026-10-05",
+      "done": "Prepared the Marketplace files and restored the intended gutter matrix: normal lines use the key icon, while dense lines use the beautify cross and independent CodeLens without key icons or inline hints.",
+      "remaining": "Package the VSIX, inspect it, and complete functional acceptance across JSON, JSONC, YAML, and XML.",
+      "blocker": "The project contract requires the developer to run the remaining npm packaging command manually."
     }
   ]
 }
